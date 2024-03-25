@@ -8,6 +8,8 @@ import TrainingjavaSpring.boot.employee.service.EmployeeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 import static TrainingjavaSpring.boot.employee.service.mapping.EmployeeServiceMapping.convertDtoToEntity;
 import static TrainingjavaSpring.boot.employee.service.mapping.EmployeeServiceMapping.convertEntityToEmployeeResponse;
 
@@ -28,6 +30,21 @@ public class EmployeeServiceImpl implements EmployeeService {
         entity = employeeRepository.save(entity);
         EmployeeResponse response = convertEntityToEmployeeResponse(entity);
         log.info(" === Finish api create new employee, Employee Id : {} === ", response.getId());
+        return response;
+    }
+
+    @Override
+    public EmployeeResponse getById(String id) {
+        log.info(" === Start api getById employee === ");
+        log.info(" === String id : {} === ", id);
+        Optional<EmployeeEntity> optionalEmployee = employeeRepository.findById(id);
+        if (!optionalEmployee.isPresent()){
+            throw new RuntimeException();
+        }
+        EmployeeEntity entity = optionalEmployee.get();
+        entity = employeeRepository.save(entity);
+        EmployeeResponse response = convertEntityToEmployeeResponse(entity);
+        log.info(" === Finish api getById employee, Employee Id : {} ===", response.getId());
         return response;
     }
 }

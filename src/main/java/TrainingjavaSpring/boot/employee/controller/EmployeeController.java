@@ -25,4 +25,13 @@ public class EmployeeController {
         log.info(" === Finish api create new employee, Employee Id {} : ===", response.getId());
         return response;
     }
+    @GetMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public EmployeeResponse getById(@PathVariable ("id") String id){
+        log.info(" === Start api getById employee === ");
+        log.info(" === String id : {} === ", id);
+        EmployeeResponse response = service.getById(id);
+        log.info(" === Finish api getById employee, Employee Id : {} === ", response.getId());
+        return response;
+    }
 }
