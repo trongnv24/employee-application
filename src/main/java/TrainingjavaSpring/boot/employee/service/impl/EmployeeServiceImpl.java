@@ -47,4 +47,22 @@ public class EmployeeServiceImpl implements EmployeeService {
         log.info(" === Finish api getById employee, Employee Id : {} ===", response.getId());
         return response;
     }
+
+    @Override
+    public EmployeeResponse update(EmployeeRequest request, String id) {
+        log.info(" === Start api update employee === ");
+        log.info(" === Request Body : {} , String id : {} ", request, id);
+        Optional<EmployeeEntity> optionalEmployee = employeeRepository.findById(id);
+        if (!optionalEmployee.isPresent()){
+            throw new RuntimeException();
+        }
+        EmployeeEntity entity = optionalEmployee.get();
+        entity.setLastName(request.getLastName());
+        entity.setFirstName(request.getFirstName());
+        entity.setDepartmentId(request.getDepartmentId());
+        entity = employeeRepository.save(entity);
+        EmployeeResponse response = convertEntityToEmployeeResponse(entity);
+        log.info(" === Finish api update employee , Employee Id : {} ", response.getId());
+        return response;
+    }
 }

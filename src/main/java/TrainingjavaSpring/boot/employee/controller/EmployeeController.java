@@ -34,4 +34,13 @@ public class EmployeeController {
         log.info(" === Finish api getById employee, Employee Id : {} === ", response.getId());
         return response;
     }
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public EmployeeResponse update(@RequestBody EmployeeRequest request, @PathVariable ("id") String id){
+        log.info(" === Start api update employee === ");
+        log.info(" === Request Body : {}, String id : {} === ", request,id);
+        EmployeeResponse response = service.update(request, id);
+        log.info(" === Finish api update, Employee Id : {} === ", response.getId());
+        return response;
+    }
 }
