@@ -8,6 +8,8 @@ import TrainingjavaSpring.boot.employee.service.EmployeeService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 import static TrainingjavaSpring.boot.employee.service.mapping.EmployeeServiceMapping.convertDtoToEntity;
 import static TrainingjavaSpring.boot.employee.service.mapping.EmployeeServiceMapping.convertEntityToEmployeeResponse;
 
@@ -29,5 +31,51 @@ public class EmployeeServiceImpl implements EmployeeService {
         EmployeeResponse response = convertEntityToEmployeeResponse(entity);
         log.info(" === Finish api create new employee, Employee Id : {} === ", response.getId());
         return response;
+    }
+
+    @Override
+    public EmployeeResponse getById(String id) {
+        log.info(" === Start api getById employee === ");
+        log.info(" === String id : {} === ", id);
+        Optional<EmployeeEntity> optionalEmployee = employeeRepository.findById(id);
+        if (!optionalEmployee.isPresent()){
+            throw new RuntimeException();
+        }
+        EmployeeEntity entity = optionalEmployee.get();
+        entity = employeeRepository.save(entity);
+        EmployeeResponse response = convertEntityToEmployeeResponse(entity);
+        log.info(" === Finish api getById employee, Employee Id : {} ===", response.getId());
+        return response;
+    }
+
+    @Override
+    public EmployeeResponse update(EmployeeRequest request, String id) {
+        log.info(" === Start api update employee === ");
+        log.info(" === Request Body : {} , String id : {} ", request, id);
+        Optional<EmployeeEntity> optionalEmployee = employeeRepository.findById(id);
+        if (!optionalEmployee.isPresent()){
+            throw new RuntimeException();
+        }
+        EmployeeEntity entity = optionalEmployee.get();
+        entity.setLastName(request.getLastName());
+        entity.setFirstName(request.getFirstName());
+        entity.setDepartmentId(request.getDepartmentId());
+        entity = employeeRepository.save(entity);
+        EmployeeResponse response = convertEntityToEmployeeResponse(entity);
+        log.info(" === Finish api update employee , Employee Id : {} ", response.getId());
+        return response;
+    }
+
+    @Override
+    public void deleteById(String id) {
+        log.info(" === Start api delete employee === ");
+        log.info(" === String id : {} === ", id);
+        Optional<EmployeeEntity> optionalEmployee = employeeRepository.findById(id);
+        if (!optionalEmployee.isPresent()){
+            throw new RuntimeException();
+        }
+        log.info(" === Finish api delete employee, Employee Id : {} ");
+        employeeRepository.deleteById(id);
+
     }
 }
